@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.geometry": "glsl",
+		"*.vertex": "glsl",
+		"*.lpl": "c"
+	}
+}

@@ -1,0 +1,61 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "make",
+            "command": "make",
+            "args": [ "all" ],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": [ "$gcc" ],
+            "group": { "kind": "build", "isDefault": true },
+            "detail": "compila quaisquer mudanças no projeto atual",
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true,
+                "revealProblems": "onProblem"
+            }
+        },
+        {
+            "type": "cppbuild",
+            "label": "remake",
+            "command": "make",
+            "args": [ "clean", "all" ],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": [ "$gcc" ],
+            "group": { "kind": "build", "isDefault": false },
+            "detail": "força todo o projeto a ser recompilado",
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true,
+                "revealProblems": "onProblem"
+            }
+        },
+        {
+            "type": "process",
+            "label": "run",
+            "command": "./app",
+            "args": [ "./src/main.cpp" ],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": [ "$gcc" ],
+            "group": { "kind": "none", "isDefault": true },
+            "detail": "roda o projeto atual",
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true,
+            }
+        }
+    ],
+    "version": "2.0.0"
+}

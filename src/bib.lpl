@@ -1,0 +1,112 @@
+#define principal void program
+#define repita(X) for(int _=0;_<X;_++)
+#define para for
+#define enquanto while
+#include <stdio.h>
+#include <unistd.h>
+#include <inttypes.h>
+#include <stdlib.h>
+#include <string.h>
+#define escreva(X,...) printf(X"\n",##__VA_ARGS__)
+#define leia(X, ...) scanf(X, ##__VA_ARGS__)
+
+enum Direcao {
+	DIREITA,
+	BAIXO,
+	ESQUERDA,
+	CIMA,
+	MAX_DIRECAO
+};
+
+typedef struct {
+	uint16_t* data;
+	int altura,largura;
+	int cursor,cursor_x,cursor_y,direcao;
+} Quadro;
+
+static Quadro quadro;
+
+void iniciar_quadro(void){
+	quadro.cursor = 1;
+	quadro.cursor_x = 0;
+	quadro.cursor_y = 0;
+	quadro.direcao = DIREITA;
+	quadro.data = (uint16_t*)malloc( quadro.largura * quadro.altura *  sizeof(uint16_t));
+	memset(quadro.data,0,quadro.largura * quadro.altura *  sizeof(uint16_t));
+}
+
+void finalizar_quadro(void){
+	if(quadro.data) free(quadro.data);
+	quadro.data = NULL;
+	quadro.altura = 0;
+	quadro.largura = 0;
+}
+
+void extrair_quadro(FILE* arquivo){
+	putwc(L'┏',arquivo);repita(quadro.largura){ putwc(L'━',arquivo); }
+	putwc(L'┓',arquivo);putwc('\n',arquivo);
+
+	for(int y=0;y<quadro.altura;y++){
+		int y0 = y*quadro.largura;
+		putwc(L'┃',arquivo);
+		for(int x=0;x<quadro.largura;x++){
+			uint16_t ch = quadro.data[y0 + x];
+			uint16_t c = ch!=0 ?ch:L' ';
+			putwc(c,arquivo);
+		}
+		putwc(L'┃',arquivo);
+		putwc(L'\n',arquivo);
+	}
+	putwc(L'┗',arquivo);repita(quadro.largura){ putwc(L'━',arquivo); }
+	putwc(L'┛',arquivo);putwc('\n',arquivo);
+}
+
+void mostrar_quadro(void){
+	extrair_quadro(stdout);
+}
+
+void Direita(void){
+	quadro.direcao = (quadro.direcao+1)%MAX_DIRECAO;
+}
+
+void Esquerda(void){
+	quadro.direcao = (quadro.direcao-1);
+	if(quadro.direcao < 0) quadro.direcao = MAX_DIRECAO-1;
+}
+
+void Anda(void){
+
+	if(quadro.cursor){
+		quadro.data[(quadro.cursor_y * quadro.largura) + quadro.cursor_x] = L'█';
+	}
+
+	switch (quadro.direcao){
+		case DIREITA: quadro.cursor_x += 1;break;
+		case ESQUERDA: quadro.cursor_x -= 1;break;
+		case CIMA: quadro.cursor_y -= 1;break;
+		case BAIXO: quadro.cursor_y += 1;break;
+		break;
+		default:break;
+	}
+	if(quadro.cursor_x >= quadro.largura ){
+		quadro.cursor_x = quadro.largura - 1;
+	}
+	if (quadro.cursor_x < 0){
+		quadro.cursor_x = 0;
+	}
+	if(quadro.cursor_y >= quadro.altura ){
+		quadro.cursor_y = quadro.altura - 1;
+	}
+	if (quadro.cursor_y < 0){
+		quadro.cursor_y = 0;
+	}
+}
+
+void Desenha(int estado){
+	quadro.cursor = estado;
+}
+
+#define L Desenha( quadro.cursor^1 );
+#define DD Direita()
+#define DE Esquerda()
+#define A Anda()

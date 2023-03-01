@@ -1,0 +1,58 @@
+#include "bib.lpl"
+
+
+
+void Linha(int x){
+	repita(x){ A; }
+}
+void Mova(int x){
+	L;//Desliga o traço
+	Linha(x);
+	L;//Religa o traço
+}
+
+void Quadrado(int l){
+	repita(4){ Linha(l);DD; }	
+}
+
+void Retangulo(int h,int l){
+	repita(2){ 
+		Linha(l);DD;
+		Linha(h);DD;
+	}	
+}
+
+principal(){
+	//inicia o ambiente de senho
+	quadro.altura=100;
+	quadro.largura=200;
+	iniciar_quadro(); 
+
+	//apenas para movimentar o desenho para o centro
+	Mova(35);DD;Mova(15);DE;
+
+	//linha superior
+	repita(10){
+		Retangulo(5,10);
+		Mova(12);
+	}
+	//volta ao início
+	DD;Mova(7);DD;Mova(12 * 10); DD;DD;
+	//linha diagonal
+	para(int i=7;i>=0;i--){ //para(int i=0;i<8;i++){
+		Mova( 12 * (i+1) );//move o espaço de 1 + i quadrados
+		Retangulo(5,10);//desenha um quadrado
+		DD;Mova(7);DD;Mova( 12 * (i+1) );DD;DD;
+		//move para baixo e volta o espaco de (1+i) quadrados
+	}
+
+	//linha inferior, mesma coisa da superior
+	repita(10){
+		Retangulo(5,10);
+		Mova(12);
+	}
+
+	//exibe o quadro desenhado
+	mostrar_quadro();
+	finalizar_quadro();
+}
